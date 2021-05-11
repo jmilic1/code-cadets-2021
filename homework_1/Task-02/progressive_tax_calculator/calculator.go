@@ -12,7 +12,6 @@ var bracketRanges = make([]int, 0, 1)
 
 func validateInput() error {
 	var lastPercent float64
-	var lastK int
 	for _, k := range bracketRanges {
 		percent := bracketTaxes[k]
 
@@ -20,12 +19,7 @@ func validateInput() error {
 			return errors.New("Tax percentages are not monotonic through class brackets")
 		}
 
-		if k == lastK {
-			return errors.New("Identical tax brackets detected. Make sure no two brackets have the same upper bound")
-		}
-
 		lastPercent = percent
-		lastK = k
 	}
 
 	return nil
@@ -37,6 +31,9 @@ func Initialize() {
 }
 
 func AddTaxRange(upperBound int, percentage float64) {
+	if bracketTaxes[upperBound] != 0 {
+
+	}
 	bracketTaxes[upperBound] = percentage
 }
 
