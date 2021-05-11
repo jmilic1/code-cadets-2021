@@ -1,3 +1,4 @@
+// Package contains unit tests and their test cases
 package progressive_tax_calculator_test
 
 import (
@@ -9,19 +10,20 @@ import (
 	. "code-cadets-2021/homework_1/Task-02/progressive_tax_calculator"
 )
 
+// tests progressive tax computation
 func TestProgressiveTax(t *testing.T) {
 	for idx, tc := range getTestCases() {
 		Convey(fmt.Sprintf("Given test case #%v: %+v", idx, tc), t, func() {
 
-			Initialize()
-			for _, val := range tc.classInput {
-				AddTaxRange(val.taxClassUpperBound, val.percentage)
+			ResetCalc()
+			for _, val := range tc.bracketInputs {
+				AddTaxRange(val.taxBracketUpperBound, val.percentage)
 			}
 			actualErr := Finalize(tc.finalPercentage)
 			if tc.expectingError {
 				So(actualErr, ShouldNotBeNil)
 			} else {
-				actualOutput := CalculateProgressiveTax(tc.valueInput)
+				actualOutput := CalculateProgressiveTax(tc.income)
 
 				So(actualErr, ShouldBeNil)
 				So(actualOutput, ShouldResemble, tc.expectedOutput)

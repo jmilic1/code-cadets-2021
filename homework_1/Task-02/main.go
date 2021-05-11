@@ -1,3 +1,4 @@
+// main package contains program executable which uses tax calculator
 package main
 
 import (
@@ -6,6 +7,7 @@ import (
 	. "code-cadets-2021/homework_1/Task-02/progressive_tax_calculator"
 )
 
+// main entrypoint for demonstrating progressive tax calculator
 func main() {
 	AddTaxRange(1000, 0)
 	AddTaxRange(5000, 0.1)
