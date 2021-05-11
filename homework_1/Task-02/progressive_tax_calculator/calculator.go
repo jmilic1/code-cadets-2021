@@ -31,9 +31,6 @@ func Initialize() {
 }
 
 func AddTaxRange(upperBound int, percentage float64) {
-	if bracketTaxes[upperBound] != 0 {
-
-	}
 	bracketTaxes[upperBound] = percentage
 }
 
