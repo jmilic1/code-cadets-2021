@@ -7,68 +7,65 @@ import (
 	"github.com/pkg/errors"
 )
 
-var classTaxes = make(map[int]float64)
-var classRanges = make([]int, 0, 1)
+var bracketTaxes = make(map[int]float64)
+var bracketRanges = make([]int, 0, 1)
 
-func validatePercentages() error {
+func validateInput() error {
 	var lastPercent float64
-	for _, k := range classRanges {
-		percent := classTaxes[k]
+	var lastK int
+	for _, k := range bracketRanges {
+		percent := bracketTaxes[k]
 
-		if lastPercent == 0 {
-			lastPercent = percent
-		} else {
-			if percent < lastPercent {
-				return errors.New("Percentages are not in order of class ranges")
-			}
+		if percent < lastPercent {
+			return errors.New("Tax percentages are not monotonic through class brackets")
 		}
+
+		if k == lastK {
+			return errors.New("Identical tax brackets detected. Make sure no two brackets have the same upper bound")
+		}
+
+		lastPercent = percent
+		lastK = k
 	}
 
 	return nil
 }
 
 func Initialize() {
-	classTaxes = make(map[int]float64)
-	classRanges = make([]int, 0, 1)
+	bracketTaxes = make(map[int]float64)
+	bracketRanges = make([]int, 0, 1)
 }
 
 func AddTaxRange(upperBound int, percentage float64) {
-	classTaxes[upperBound] = percentage
+	bracketTaxes[upperBound] = percentage
 }
 
 func Finalize(percentage float64) error {
-	classTaxes[math.MaxInt32] = percentage
+	bracketTaxes[math.MaxInt32] = percentage
 
-	classRanges = make([]int, 0, len(classTaxes))
-	for k := range classTaxes {
-		classRanges = append(classRanges, k)
+	bracketRanges = make([]int, 0, len(bracketTaxes))
+	for k := range bracketTaxes {
+		bracketRanges = append(bracketRanges, k)
 	}
 
-	sort.Ints(classRanges)
-	return validatePercentages()
+	sort.Ints(bracketRanges)
+	return validateInput()
 }
 
 func CalculateProgressiveTax(value int) float64 {
 	var tax float64
 	var offset int
 
-	for _, k := range classRanges {
-		percent := classTaxes[k]
+	for _, k := range bracketRanges {
+		percent := bracketTaxes[k]
 
-		temp := k - offset
+		factor := math.Min(float64(value-offset), float64(k-offset))
+		tax += factor * percent
 
-		if k == math.MaxInt32 {
-			tax += float64(value-offset) * percent
-			break
-		}
-
-		if value <= k {
-			tax += float64(value-temp) * percent
-			break
-		}
-
-		tax += float64(temp) * percent
 		offset = k
+		if value <= k || k == math.MaxInt32 {
+			break
+		}
 	}
 
 	return tax
