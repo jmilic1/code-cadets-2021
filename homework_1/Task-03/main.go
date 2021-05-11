@@ -1,3 +1,4 @@
+// package containing main executable for fetching Pokemon information
 package main
 
 import (
@@ -10,25 +11,32 @@ import (
 	"strconv"
 )
 
+// url contains base path to pokeAPI
 const url = "https://pokeapi.co/api/v2/pokemon/"
 
+// pokemonDto contains fields which need to be in output
 type pokemonDto struct {
 	Name       string
 	Encounters []string
 }
 
+// pokemon is a basic model of Pokemon information
+// it is defined by json response for "https://pokeapi.co/api/v2/pokemon/1"
 type pokemon struct {
 	Name                     string
 	Location_area_encounters string
-	Encounters               []string
 }
 
-type areaEncounters struct {
+// areaEncounter is a basic model containing information about where a Pokemon can be found
+// it is defined by json response for "https://pokeapi.co/api/v2/pokemon/1/encounters"
+type areaEncounter struct {
 	Location_area struct {
 		Name string
 	}
 }
 
+// fetchFromUrl fetches data from given url.
+// returns data as an array of bytes and an error if it occurred
 func fetchFromUrl(url string) ([]byte, error) {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -43,6 +51,8 @@ func fetchFromUrl(url string) ([]byte, error) {
 	return bodyContent, nil
 }
 
+// main is the entrypoint for getting Pokemon information.
+// Valid flags are "id" of type int and "name" of type string
 func main() {
 	var id int
 	var name string
@@ -83,7 +93,7 @@ func main() {
 		)
 	}
 
-	var decodedEncounters []areaEncounters
+	var decodedEncounters []areaEncounter
 	err = json.Unmarshal(bodyContent, &decodedEncounters)
 	if err != nil {
 		log.Fatal(
