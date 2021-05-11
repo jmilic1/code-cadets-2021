@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 const url = "https://pokeapi.co/api/v2/pokemon/"
@@ -46,8 +47,8 @@ func main() {
 	var id int
 	var name string
 
-	flag.IntVar(&id, "pokemon-id", 0, "Id of Pokemon to be retrieved")
-	flag.StringVar(&name, "pokemon-name", "wooper", "Name of Pokemon to be retrieved")
+	flag.IntVar(&id, "id", 0, "Id of Pokemon to be retrieved")
+	flag.StringVar(&name, "name", "wooper", "Name of Pokemon to be retrieved")
 
 	flag.Parse()
 
@@ -61,7 +62,7 @@ func main() {
 		}
 
 	} else {
-		bodyContent, err = fetchFromUrl(url + string(rune(id)))
+		bodyContent, err = fetchFromUrl(url + strconv.Itoa(id))
 		if err != nil {
 			log.Fatal(err, "Error while fetching content")
 		}
