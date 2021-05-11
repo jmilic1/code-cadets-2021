@@ -105,5 +105,68 @@ func getTestCases() []testCase {
 			expectedOutput: 17000,
 			expectingError: false,
 		},
+		{
+			finalPercentage: 0,
+			valueInput:      70000,
+
+			expectedOutput: 0,
+			expectingError: false,
+		},
+		{
+			classInput: []taxClassInput{
+				{
+					taxClassUpperBound: 1000,
+					percentage:         0.1,
+				},
+			},
+			finalPercentage: 0.2,
+			valueInput:      7000,
+
+			expectedOutput: 1300,
+			expectingError: false,
+		},
+		{
+			classInput: []taxClassInput{
+				{
+					taxClassUpperBound: 1000,
+					percentage:         0.1,
+				},
+			},
+			finalPercentage: 0.2,
+			valueInput:      0,
+
+			expectedOutput: 0,
+			expectingError: false,
+		},
+		{
+			classInput: []taxClassInput{
+				{
+					taxClassUpperBound: 1000,
+					percentage:         0.1,
+				},
+			},
+			finalPercentage: 0,
+			valueInput:      0,
+
+			expectedOutput: 0,
+			expectingError: true,
+		},
+		{
+			classInput: []taxClassInput{
+				{
+					taxClassUpperBound: 1000,
+					percentage:         0.3,
+				},
+				{
+					taxClassUpperBound: 2000,
+					percentage:         0.2,
+				},
+			},
+			finalPercentage: 0,
+			valueInput:      0,
+
+			expectedOutput: 0,
+			expectingError: true,
+		},
 	}
 }
