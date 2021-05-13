@@ -1,8 +1,6 @@
 package calculator
 
 import (
-	"math"
-
 	"github.com/pkg/errors"
 )
 
@@ -23,8 +21,8 @@ func validateSliceIncreasing(values []float32) error {
 	return nil
 }
 
-func validateBracketInput(thresholds []float32, taxRates []float32) error {
-	if len(thresholds)+1 != len(taxRates) {
+func validateBracketInput(thresholds []float32, taxRates []float32, finalTaxRate float32) error {
+	if len(thresholds) != len(taxRates) {
 		return errors.New("incorrect number of thresholds given the number of tax rates")
 	}
 
@@ -33,7 +31,21 @@ func validateBracketInput(thresholds []float32, taxRates []float32) error {
 		return err
 	}
 
-	return validateSliceIncreasing(taxRates)
+	err = validateSliceIncreasing(taxRates)
+	if err != nil {
+		return err
+	}
+
+	taxRatesLength := len(taxRates)
+	if taxRatesLength == 0 {
+		return nil
+	}
+
+	if finalTaxRate <= taxRates[taxRatesLength-1] {
+		return errors.New("rate of final tax bracket is lesser than the tax rate from another bracket")
+	}
+
+	return nil
 }
 
 func prepareBracketData(thresholds []float32, taxRates []float32) []taxBracket {
@@ -47,22 +59,10 @@ func prepareBracketData(thresholds []float32, taxRates []float32) []taxBracket {
 		brackets = append(brackets, bracket)
 	}
 
-	bracket := taxBracket{
-		threshold: math.MaxFloat32,
-		taxRate:   taxRates[len(taxRates)-1],
-	}
-	brackets = append(brackets, bracket)
 	return brackets
 }
 
-func CalculateProgressiveTax(thresholds []float32, taxRates []float32, income float32) (float32, error) {
-	err := validateBracketInput(thresholds, taxRates)
-	if err != nil {
-		return 0, err
-	}
-
-	brackets := prepareBracketData(thresholds, taxRates)
-
+func computeTax(brackets []taxBracket, income float32, finalTaxRate float32) float32 {
 	var tax float32
 	var lastThreshold float32
 
@@ -70,15 +70,33 @@ func CalculateProgressiveTax(thresholds []float32, taxRates []float32, income fl
 		threshold := bracket.threshold
 		rate := bracket.taxRate
 
-		incomeWithinBracket := math.Min(float64(income-lastThreshold), float64(threshold-lastThreshold))
-		tax += float32(incomeWithinBracket) * rate
-
+		// income does not exceed final bracket
 		if income <= threshold {
-			break
+			incomeWithinBracket := income - lastThreshold
+			tax += incomeWithinBracket * rate
+
+			return tax
 		}
+
+		incomeWithinBracket := threshold - lastThreshold
+		tax += incomeWithinBracket * rate
 
 		lastThreshold = threshold
 	}
 
-	return tax, nil
+	incomeWithinBracket := income - lastThreshold
+	tax += incomeWithinBracket * finalTaxRate
+
+	return tax
+}
+
+func CalculateProgressiveTax(thresholds []float32, taxRates []float32, finalTaxRate float32, income float32) (float32, error) {
+	err := validateBracketInput(thresholds, taxRates, finalTaxRate)
+	if err != nil {
+		return 0, err
+	}
+
+	brackets := prepareBracketData(thresholds, taxRates)
+
+	return computeTax(brackets, income, finalTaxRate), nil
 }

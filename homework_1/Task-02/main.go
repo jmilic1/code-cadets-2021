@@ -13,8 +13,11 @@ import (
 func main() {
 
 	thresholds := []float32{1000, 5000, 10000}
-	taxRates := []float32{0, 0.1, 0.2, 0.3}
-	tax, err := calculator.CalculateProgressiveTax(thresholds, taxRates, 7000)
+	taxRates := []float32{0, 0.1, 0.2}
+	finalTaxRate := float32(0.3)
+	income := float32(7000)
+
+	tax, err := calculator.CalculateProgressiveTax(thresholds, taxRates, finalTaxRate, income)
 
 	if err != nil {
 		log.Fatal(
