@@ -14,7 +14,7 @@ func main() {
 
 	taxBrackets := []calculator.TaxBracket{{TaxRate: 0, Threshold: 1000}, {0.1, 5000}, {0.2, 10000}}
 	finalTaxRate := 0.3
-	income := float64(7000)
+	income := 7000.0
 
 	tax, err := calculator.CalculateProgressiveTax(taxBrackets, finalTaxRate, income)
 

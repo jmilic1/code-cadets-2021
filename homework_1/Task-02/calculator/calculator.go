@@ -11,8 +11,8 @@ type TaxBracket struct {
 }
 
 func validateBracketsIncreasing(taxBrackets []TaxBracket) error {
-	lastThreshold := float64(0)
-	lastTaxRate := float64(0)
+	lastThreshold := 0.0
+	lastTaxRate := 0.0
 
 	for _, taxBracket := range taxBrackets {
 		threshold := taxBracket.Threshold
