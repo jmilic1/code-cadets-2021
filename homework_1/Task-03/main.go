@@ -14,6 +14,12 @@ func main() {
 
 	flag.Parse()
 
+	if pokemon == nil {
+		log.Fatal(
+			"flag parsing returned nil pointer",
+		)
+	}
+
 	encounters, err := pokemonEncounterApi.GetEncounters(*pokemon)
 	if err != nil {
 		log.Fatal(
