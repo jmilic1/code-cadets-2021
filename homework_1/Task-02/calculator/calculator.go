@@ -2,76 +2,83 @@ package calculator
 
 import (
 	"math"
-	"sort"
 
 	"github.com/pkg/errors"
 )
 
-// Private map property containing upper bound of brackets and their corresponding tax rate.
-var bracketTaxes = make(map[int]float64)
+type taxBracket struct {
+	taxRate   float32
+	threshold float32
+}
 
-// Private array property containing upper bounds of brackets.
-// Used as a utility collection to sort brackets by their upper bounds in increasing order.
-var bracketRanges = make([]int, 0, 1)
-
-// validateInput validates if bracketTaxes holds valid progressive tax data.
-// returns error if data are not valid
-func validateInput() error {
-	var lastPercent float64
-	for _, k := range bracketRanges {
-		percent := bracketTaxes[k]
-
-		if percent < lastPercent {
-			return errors.New("Tax percentages are not monotonic through class brackets")
+func validateSliceIncreasing(values []float32) error {
+	lastThreshold := float32(0)
+	for _, threshold := range values {
+		if lastThreshold != 0 && lastThreshold >= threshold {
+			return errors.New("values are not monotonically increasing")
 		}
 
-		lastPercent = percent
+		lastThreshold = threshold
 	}
-
 	return nil
 }
 
-// ResetCalc deletes cached tax brackets
-func ResetCalc() {
-	bracketTaxes = make(map[int]float64)
-	bracketRanges = make([]int, 0, 1)
-}
-
-// AddTaxRange adds a new bracket or overwrites an old bracket in bracketTaxes
-func AddTaxRange(upperBound int, percentage float64) {
-	bracketTaxes[upperBound] = percentage
-}
-
-// Finalize adds the given percentage as the final tax bracket and validates if tax brackets were properly defined.
-// throws error if tax brackets are not valid
-func Finalize(percentage float64) error {
-	bracketTaxes[math.MaxInt32] = percentage
-
-	bracketRanges = make([]int, 0, len(bracketTaxes))
-	for k := range bracketTaxes {
-		bracketRanges = append(bracketRanges, k)
+func validateBracketInput(thresholds []float32, taxRates []float32) error {
+	if len(thresholds)+1 != len(taxRates) {
+		return errors.New("incorrect number of thresholds given the number of tax rates")
 	}
 
-	sort.Ints(bracketRanges)
-	return validateInput()
+	err := validateSliceIncreasing(thresholds)
+	if err != nil {
+		return err
+	}
+
+	return validateSliceIncreasing(taxRates)
 }
 
-// CalculateProgressiveTax computes progressive tax for given income
-func CalculateProgressiveTax(income int) float64 {
-	var tax float64
-	var offset int
+func prepareBracketData(thresholds []float32, taxRates []float32) []taxBracket {
+	var brackets []taxBracket
+	for index, bracketThreshold := range thresholds {
+		bracketTaxRate := taxRates[index]
+		bracket := taxBracket{
+			threshold: bracketThreshold,
+			taxRate:   bracketTaxRate,
+		}
+		brackets = append(brackets, bracket)
+	}
 
-	for _, k := range bracketRanges {
-		percent := bracketTaxes[k]
+	bracket := taxBracket{
+		threshold: math.MaxFloat32,
+		taxRate:   taxRates[len(taxRates)-1],
+	}
+	brackets = append(brackets, bracket)
+	return brackets
+}
 
-		factor := math.Min(float64(income-offset), float64(k-offset))
-		tax += factor * percent
+func CalculateProgressiveTax(thresholds []float32, taxRates []float32, income float32) (float32, error) {
+	err := validateBracketInput(thresholds, taxRates)
+	if err != nil {
+		return 0, err
+	}
 
-		offset = k
-		if income <= k || k == math.MaxInt32 {
+	brackets := prepareBracketData(thresholds, taxRates)
+
+	var tax float32
+	var lastThreshold float32
+
+	for _, bracket := range brackets {
+		threshold := bracket.threshold
+		rate := bracket.taxRate
+
+		incomeWithinBracket := math.Min(float64(income-lastThreshold), float64(threshold-lastThreshold))
+		tax += float32(incomeWithinBracket) * rate
+
+		if income <= threshold {
 			break
 		}
+
+		lastThreshold = threshold
 	}
 
-	return tax
+	return tax, nil
 }

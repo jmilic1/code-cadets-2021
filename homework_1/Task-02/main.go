@@ -4,20 +4,23 @@ package main
 import (
 	"log"
 
-	. "code-cadets-2021/homework_1/Task-02/calculator"
+	"github.com/pkg/errors"
+
+	"code-cadets-2021/homework_1/Task-02/calculator"
 )
 
 // main entrypoint for demonstrating progressive tax calculator
 func main() {
-	AddTaxRange(1000, 0)
-	AddTaxRange(5000, 0.1)
-	AddTaxRange(10000, 0.2)
-	err := Finalize(0.3)
+
+	thresholds := []float32{1000, 5000, 10000}
+	taxRates := []float32{0, 0.1, 0.2, 0.3}
+	tax, err := calculator.CalculateProgressiveTax(thresholds, taxRates, 7000)
 
 	if err != nil {
-		log.Fatal(err, "error while calculating tax")
+		log.Fatal(
+			errors.WithMessage(err, "error while calculating tax"),
+		)
 	}
 
-	num := CalculateProgressiveTax(7000)
-	log.Println(num)
+	log.Println(tax)
 }

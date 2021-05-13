@@ -1,18 +1,12 @@
 package calculator_test
 
-// input model for defining a tax bracket
-type taxBracketInput struct {
-	taxBracketUpperBound int
-	percentage           float64
-}
-
 // test case model for unit testing
 type testCase struct {
-	bracketInputs   []taxBracketInput
-	finalPercentage float64
-	income          int
+	thresholds []float32
+	taxRates   []float32
+	income     float32
 
-	expectedOutput float64
+	expectedOutput float32
 	expectingError bool
 }
 
@@ -20,185 +14,81 @@ type testCase struct {
 func getTestCases() []testCase {
 	return []testCase{
 		{
-			bracketInputs: []taxBracketInput{
-				{
-					taxBracketUpperBound: 1000,
-					percentage:           0,
-				},
-				{
-					taxBracketUpperBound: 5000,
-					percentage:           0.1,
-				},
-				{
-					taxBracketUpperBound: 10000,
-					percentage:           0.2,
-				},
-			},
-			finalPercentage: 0.3,
-			income:          7000,
+			thresholds: []float32{1000, 5000, 10000},
+			taxRates:   []float32{0, 0.1, 0.2, 0.3},
+			income:     7000,
 
 			expectedOutput: 800,
 			expectingError: false,
 		},
 		{
-			bracketInputs: []taxBracketInput{
-				{
-					taxBracketUpperBound: 10000,
-					percentage:           0.1,
-				},
-				{
-					taxBracketUpperBound: 20000,
-					percentage:           0.2,
-				},
-			},
-			finalPercentage: 0.3,
-			income:          20000,
+			thresholds: []float32{10000, 20000},
+			taxRates:   []float32{0.1, 0.2, 0.3},
+			income:     20000,
 
 			expectedOutput: 3000,
 			expectingError: false,
 		},
 		{
-			bracketInputs: []taxBracketInput{
-				{
-					taxBracketUpperBound: 10000,
-					percentage:           0.1,
-				},
-				{
-					taxBracketUpperBound: 20000,
-					percentage:           0.2,
-				},
-			},
-			finalPercentage: 0.3,
-			income:          25000,
+			thresholds: []float32{10000, 20000},
+			taxRates:   []float32{0.1, 0.2, 0.3},
+			income:     25000,
 
 			expectedOutput: 4500,
 			expectingError: false,
 		},
 		{
-			bracketInputs: []taxBracketInput{
-				{
-					taxBracketUpperBound: 10000,
-					percentage:           0.1,
-				},
-				{
-					taxBracketUpperBound: 20000,
-					percentage:           0.15,
-				},
-				{
-					taxBracketUpperBound: 20000,
-					percentage:           0.15,
-				},
-				{
-					taxBracketUpperBound: 30000,
-					percentage:           0.2,
-				},
-				{
-					taxBracketUpperBound: 40000,
-					percentage:           0.25,
-				},
-				{
-					taxBracketUpperBound: 50000,
-					percentage:           0.3,
-				},
-			},
-			finalPercentage: 0.35,
-			income:          70000,
+			thresholds: []float32{10000, 20000, 30000, 40000, 50000},
+			taxRates:   []float32{0.1, 0.15, 0.2, 0.25, 0.3, 0.35},
+			income:     70000,
 
 			expectedOutput: 17000,
 			expectingError: false,
 		},
 		{
-			finalPercentage: 0,
-			income:          70000,
+			thresholds: []float32{},
+			taxRates:   []float32{0.1},
+			income:     70000,
 
-			expectedOutput: 0,
+			expectedOutput: 7000,
 			expectingError: false,
 		},
 		{
-			bracketInputs: []taxBracketInput{
-				{
-					taxBracketUpperBound: 1000,
-					percentage:           0.1,
-				},
-			},
-			finalPercentage: 0.2,
-			income:          7000,
+			thresholds: []float32{1000},
+			taxRates:   []float32{0.1, 0.2},
+			income:     7000,
 
 			expectedOutput: 1300,
 			expectingError: false,
 		},
 		{
-			bracketInputs: []taxBracketInput{
-				{
-					taxBracketUpperBound: 1000,
-					percentage:           0.1,
-				},
-			},
-			finalPercentage: 0.2,
-			income:          0,
+			thresholds: []float32{1000},
+			taxRates:   []float32{0.1, 0.2},
+			income:     0,
 
 			expectingError: false,
 		},
 		{
-			bracketInputs: []taxBracketInput{
-				{
-					taxBracketUpperBound: 1000,
-					percentage:           0.1,
-				},
-			},
-			finalPercentage: 0,
-			income:          0,
+			thresholds: []float32{1000},
+			taxRates:   []float32{0.1},
 
 			expectingError: true,
 		},
 		{
-			bracketInputs: []taxBracketInput{
-				{
-					taxBracketUpperBound: 1000,
-					percentage:           0.3,
-				},
-				{
-					taxBracketUpperBound: 2000,
-					percentage:           0.2,
-				},
-			},
-			finalPercentage: 0.4,
-			income:          0,
+			thresholds: []float32{1000},
+			taxRates:   []float32{0.1, 0},
 
 			expectingError: true,
 		},
-
 		{
-			bracketInputs: []taxBracketInput{
-				{
-					taxBracketUpperBound: 1000,
-					percentage:           0.3,
-				},
-				{
-					taxBracketUpperBound: 1000,
-					percentage:           0.4,
-				},
-			},
-			finalPercentage: 0.5,
-			income:          2000,
+			thresholds: []float32{1000, 1000},
+			taxRates:   []float32{0.3, 0.4, 0.5},
 
-			expectedOutput: 900,
-			expectingError: false,
+			expectingError: true,
 		},
-
 		{
-			bracketInputs: []taxBracketInput{
-				{
-					taxBracketUpperBound: 1000,
-					percentage:           0.3,
-				},
-				{
-					taxBracketUpperBound: 1000,
-					percentage:           0.2,
-				},
-			},
-			finalPercentage: 0.1,
-			income:          0,
+			thresholds: []float32{10000, 20000, 20000},
+			taxRates:   []float32{0.1, 0.15, 0.15, 0.2},
 
 			expectingError: true,
 		},

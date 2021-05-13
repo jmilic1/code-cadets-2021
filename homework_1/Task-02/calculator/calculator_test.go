@@ -14,16 +14,11 @@ func TestProgressiveTax(t *testing.T) {
 	for idx, tc := range getTestCases() {
 		Convey(fmt.Sprintf("Given test case #%v: %+v", idx, tc), t, func() {
 
-			ResetCalc()
-			for _, val := range tc.bracketInputs {
-				AddTaxRange(val.taxBracketUpperBound, val.percentage)
-			}
-			actualErr := Finalize(tc.finalPercentage)
+			actualOutput, actualErr := CalculateProgressiveTax(tc.thresholds, tc.taxRates, tc.income)
+
 			if tc.expectingError {
 				So(actualErr, ShouldNotBeNil)
 			} else {
-				actualOutput := CalculateProgressiveTax(tc.income)
-
 				So(actualErr, ShouldBeNil)
 				So(actualOutput, ShouldResemble, tc.expectedOutput)
 			}
