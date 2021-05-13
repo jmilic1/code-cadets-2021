@@ -4,6 +4,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// taxBracket models containing the taxRate and the threshold for a certain bracket
 type taxBracket struct {
 	taxRate   float32
 	threshold float32
@@ -90,6 +91,9 @@ func computeTax(brackets []taxBracket, income float32, finalTaxRate float32) flo
 	return tax
 }
 
+// CalculateProgressiveTax calculate tax based on given input.
+// given threshold and taxRate slices need to be of the same length and sorted in increasing order.
+// finalTaxRate needs to be greater than any other element in taxRates
 func CalculateProgressiveTax(thresholds []float32, taxRates []float32, finalTaxRate float32, income float32) (float32, error) {
 	err := validateBracketInput(thresholds, taxRates, finalTaxRate)
 	if err != nil {
