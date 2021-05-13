@@ -1,13 +1,14 @@
 package calculator_test
 
+import "code-cadets-2021/homework_1/Task-02/calculator"
+
 // test case model for unit testing
 type testCase struct {
-	thresholds   []float32
-	taxRates     []float32
-	finalTaxRate float32
-	income       float32
+	taxBrackets  []calculator.TaxBracket
+	finalTaxRate float64
+	income       float64
 
-	expectedOutput float32
+	expectedOutput float64
 	expectingError bool
 }
 
@@ -15,8 +16,11 @@ type testCase struct {
 func getTestCases() []testCase {
 	return []testCase{
 		{
-			thresholds:   []float32{1000, 5000, 10000},
-			taxRates:     []float32{0, 0.1, 0.2},
+			taxBrackets: []calculator.TaxBracket{
+				{TaxRate: 0, Threshold: 1000},
+				{TaxRate: 0.1, Threshold: 5000},
+				{TaxRate: 0.2, Threshold: 10000},
+			},
 			finalTaxRate: 0.3,
 			income:       7000,
 
@@ -24,8 +28,10 @@ func getTestCases() []testCase {
 			expectingError: false,
 		},
 		{
-			thresholds:   []float32{10000, 20000},
-			taxRates:     []float32{0.1, 0.2},
+			taxBrackets: []calculator.TaxBracket{
+				{TaxRate: 0.1, Threshold: 10000},
+				{TaxRate: 0.2, Threshold: 20000},
+			},
 			finalTaxRate: 0.3,
 			income:       20000,
 
@@ -33,8 +39,10 @@ func getTestCases() []testCase {
 			expectingError: false,
 		},
 		{
-			thresholds:   []float32{10000, 20000},
-			taxRates:     []float32{0.1, 0.2},
+			taxBrackets: []calculator.TaxBracket{
+				{TaxRate: 0.1, Threshold: 10000},
+				{TaxRate: 0.2, Threshold: 20000},
+			},
 			finalTaxRate: 0.3,
 			income:       25000,
 
@@ -42,8 +50,13 @@ func getTestCases() []testCase {
 			expectingError: false,
 		},
 		{
-			thresholds:   []float32{10000, 20000, 30000, 40000, 50000},
-			taxRates:     []float32{0.1, 0.15, 0.2, 0.25, 0.3},
+			taxBrackets: []calculator.TaxBracket{
+				{TaxRate: 0.1, Threshold: 10000},
+				{TaxRate: 0.15, Threshold: 20000},
+				{TaxRate: 0.2, Threshold: 30000},
+				{TaxRate: 0.25, Threshold: 40000},
+				{TaxRate: 0.3, Threshold: 50000},
+			},
 			finalTaxRate: 0.35,
 			income:       70000,
 
@@ -51,8 +64,9 @@ func getTestCases() []testCase {
 			expectingError: false,
 		},
 		{
-			thresholds:   []float32{},
-			taxRates:     []float32{},
+			taxBrackets: []calculator.TaxBracket{
+				{},
+			},
 			finalTaxRate: 0.1,
 			income:       70000,
 
@@ -60,8 +74,9 @@ func getTestCases() []testCase {
 			expectingError: false,
 		},
 		{
-			thresholds:   []float32{1000},
-			taxRates:     []float32{0.1},
+			taxBrackets: []calculator.TaxBracket{
+				{TaxRate: 0.1, Threshold: 1000},
+			},
 			finalTaxRate: 0.2,
 			income:       7000,
 
@@ -69,34 +84,18 @@ func getTestCases() []testCase {
 			expectingError: false,
 		},
 		{
-			thresholds:   []float32{1000},
-			taxRates:     []float32{0.1},
+			taxBrackets: []calculator.TaxBracket{
+				{TaxRate: 0.1, Threshold: 1000},
+			},
 			finalTaxRate: 0.2,
 			income:       0,
 
 			expectingError: false,
 		},
 		{
-			thresholds: []float32{1000},
-			taxRates:   []float32{0.1},
-
-			expectingError: true,
-		},
-		{
-			thresholds: []float32{1000},
-			taxRates:   []float32{0.1, 0},
-
-			expectingError: true,
-		},
-		{
-			thresholds: []float32{1000, 1000},
-			taxRates:   []float32{0.3, 0.4, 0.5},
-
-			expectingError: true,
-		},
-		{
-			thresholds: []float32{10000, 20000, 20000},
-			taxRates:   []float32{0.1, 0.15, 0.15, 0.2},
+			taxBrackets: []calculator.TaxBracket{
+				{TaxRate: 0.1, Threshold: 1000},
+			},
 
 			expectingError: true,
 		},

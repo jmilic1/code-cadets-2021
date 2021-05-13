@@ -4,72 +4,54 @@ import (
 	"github.com/pkg/errors"
 )
 
-// taxBracket models containing the taxRate and the threshold for a certain bracket
-type taxBracket struct {
-	taxRate   float32
-	threshold float32
+// TaxBracket models containing the TaxRate and the Threshold for a certain bracket
+type TaxBracket struct {
+	TaxRate   float64
+	Threshold float64
 }
 
-func validateSliceIncreasing(values []float32) error {
-	lastThreshold := float32(0)
-	for _, threshold := range values {
+func validateBracketsIncreasing(taxBrackets []TaxBracket) error {
+	lastThreshold := float64(0)
+	lastTaxRate := float64(0)
+
+	for _, taxBracket := range taxBrackets {
+		threshold := taxBracket.Threshold
+		taxRate := taxBracket.TaxRate
+
 		if lastThreshold != 0 && lastThreshold >= threshold {
+			return errors.New("values are not monotonically increasing")
+		}
+		if lastTaxRate != 0 && lastTaxRate >= taxRate {
 			return errors.New("values are not monotonically increasing")
 		}
 
 		lastThreshold = threshold
+		lastTaxRate = taxRate
 	}
 	return nil
 }
 
-func validateBracketInput(thresholds []float32, taxRates []float32, finalTaxRate float32) error {
-	if len(thresholds) != len(taxRates) {
-		return errors.New("incorrect number of thresholds given the number of tax rates")
-	}
-
-	err := validateSliceIncreasing(thresholds)
+func validateBracketInput(taxBrackets []TaxBracket, finalTaxRate float64) error {
+	err := validateBracketsIncreasing(taxBrackets)
 	if err != nil {
 		return err
 	}
 
-	err = validateSliceIncreasing(taxRates)
-	if err != nil {
-		return err
-	}
-
-	taxRatesLength := len(taxRates)
-	if taxRatesLength == 0 {
-		return nil
-	}
-
-	if finalTaxRate <= taxRates[taxRatesLength-1] {
+	taxRatesLength := len(taxBrackets)
+	if taxRatesLength != 0 && finalTaxRate <= taxBrackets[taxRatesLength-1].TaxRate {
 		return errors.New("rate of final tax bracket is lesser than the tax rate from another bracket")
 	}
 
 	return nil
 }
 
-func prepareBracketData(thresholds []float32, taxRates []float32) []taxBracket {
-	var brackets []taxBracket
-	for index, bracketThreshold := range thresholds {
-		bracketTaxRate := taxRates[index]
-		bracket := taxBracket{
-			threshold: bracketThreshold,
-			taxRate:   bracketTaxRate,
-		}
-		brackets = append(brackets, bracket)
-	}
-
-	return brackets
-}
-
-func computeTax(brackets []taxBracket, income float32, finalTaxRate float32) float32 {
-	var tax float32
-	var lastThreshold float32
+func computeTax(brackets []TaxBracket, income float64, finalTaxRate float64) float64 {
+	var tax float64
+	var lastThreshold float64
 
 	for _, bracket := range brackets {
-		threshold := bracket.threshold
-		rate := bracket.taxRate
+		threshold := bracket.Threshold
+		rate := bracket.TaxRate
 
 		// income does not exceed final bracket
 		if income <= threshold {
@@ -92,15 +74,13 @@ func computeTax(brackets []taxBracket, income float32, finalTaxRate float32) flo
 }
 
 // CalculateProgressiveTax calculate tax based on given input.
-// given threshold and taxRate slices need to be of the same length and sorted in increasing order.
-// finalTaxRate needs to be greater than any other element in taxRates
-func CalculateProgressiveTax(thresholds []float32, taxRates []float32, finalTaxRate float32, income float32) (float32, error) {
-	err := validateBracketInput(thresholds, taxRates, finalTaxRate)
+// given taxBrackets need to be sorted in increasing order based on their taxRates and thresholds.
+// finalTaxRate needs to be greater than any taxRate defined in taxBrackets
+func CalculateProgressiveTax(taxBrackets []TaxBracket, finalTaxRate float64, income float64) (float64, error) {
+	err := validateBracketInput(taxBrackets, finalTaxRate)
 	if err != nil {
 		return 0, err
 	}
 
-	brackets := prepareBracketData(thresholds, taxRates)
-
-	return computeTax(brackets, income, finalTaxRate), nil
+	return computeTax(taxBrackets, income, finalTaxRate), nil
 }
