@@ -1,5 +1,4 @@
-// Package progressive_tax_calculator contains progressive tax calculator
-package progressive_tax_calculator
+package calculator
 
 import (
 	"math"

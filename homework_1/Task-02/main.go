@@ -4,7 +4,7 @@ package main
 import (
 	"log"
 
-	. "code-cadets-2021/homework_1/Task-02/progressive_tax_calculator"
+	. "code-cadets-2021/homework_1/Task-02/calculator"
 )
 
 // main entrypoint for demonstrating progressive tax calculator

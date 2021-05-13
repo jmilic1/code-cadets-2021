@@ -1,5 +1,4 @@
-// Package contains unit tests and their test cases
-package progressive_tax_calculator_test
+package calculator_test
 
 // input model for defining a tax bracket
 type taxBracketInput struct {

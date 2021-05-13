@@ -1,5 +1,4 @@
-// Package contains unit tests and their test cases
-package progressive_tax_calculator_test
+package calculator_test
 
 import (
 	"fmt"
@@ -7,7 +6,7 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
-	. "code-cadets-2021/homework_1/Task-02/progressive_tax_calculator"
+	. "code-cadets-2021/homework_1/Task-02/calculator"
 )
 
 // tests progressive tax computation
