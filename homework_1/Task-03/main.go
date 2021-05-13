@@ -1,7 +1,7 @@
 package main
 
 import (
-	pokemonEncounterApi "code-cadets-2021/homework_1/Task-03/pokemon-encounter-api"
+	pokemonEncounterApi "code-cadets-2021/homework_1/Task-03/encounters"
 	"encoding/json"
 	"flag"
 	"github.com/pkg/errors"

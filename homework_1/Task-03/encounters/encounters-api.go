@@ -1,4 +1,4 @@
-package pokemon_encounter_api
+package encounters
 
 import (
 	"encoding/json"
