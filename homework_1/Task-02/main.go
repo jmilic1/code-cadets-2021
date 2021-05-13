@@ -15,7 +15,7 @@ func main() {
 	err := Finalize(0.3)
 
 	if err != nil {
-		log.Fatal(err, "Error while calculating tax!")
+		log.Fatal(err, "error while calculating tax")
 	}
 
 	num := CalculateProgressiveTax(7000)
