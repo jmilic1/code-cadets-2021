@@ -37,8 +37,8 @@ func validateBracketInput(taxBrackets []TaxBracket, finalTaxRate float64) error 
 		return err
 	}
 
-	taxRatesLength := len(taxBrackets)
-	if taxRatesLength != 0 && finalTaxRate <= taxBrackets[taxRatesLength-1].TaxRate {
+	taxBracketsLength := len(taxBrackets)
+	if taxBracketsLength != 0 && finalTaxRate <= taxBrackets[taxBracketsLength-1].TaxRate {
 		return errors.New("rate of final tax bracket is lesser than the tax rate from another bracket")
 	}
 
