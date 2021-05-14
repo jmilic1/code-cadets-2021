@@ -14,16 +14,16 @@ func main() {
 
 	taxBrackets := []calculator.TaxBracket{
 		{
-			TaxRate:   0,
-			Threshold: 1000,
+			TaxRate:        0,
+			UpperThreshold: 1000,
 		},
 		{
-			TaxRate:   0.1,
-			Threshold: 5000,
+			TaxRate:        0.1,
+			UpperThreshold: 5000,
 		},
 		{
-			TaxRate:   0.2,
-			Threshold: 10000,
+			TaxRate:        0.2,
+			UpperThreshold: 10000,
 		},
 	}
 	finalTaxRate := 0.3

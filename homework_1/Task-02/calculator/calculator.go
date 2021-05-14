@@ -4,10 +4,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-// TaxBracket models containing the TaxRate and the Threshold for a certain bracket
+// TaxBracket models containing the TaxRate and the UpperThreshold for a certain bracket
 type TaxBracket struct {
-	TaxRate   float64
-	Threshold float64
+	TaxRate        float64
+	UpperThreshold float64
 }
 
 func validateBracketsIncreasing(taxBrackets []TaxBracket) error {
@@ -15,7 +15,7 @@ func validateBracketsIncreasing(taxBrackets []TaxBracket) error {
 	lastTaxRate := 0.0
 
 	for _, taxBracket := range taxBrackets {
-		threshold := taxBracket.Threshold
+		threshold := taxBracket.UpperThreshold
 		taxRate := taxBracket.TaxRate
 
 		if lastThreshold != 0 && lastThreshold >= threshold {
@@ -50,7 +50,7 @@ func computeTax(brackets []TaxBracket, income float64, finalTaxRate float64) flo
 	var lastThreshold float64
 
 	for _, bracket := range brackets {
-		threshold := bracket.Threshold
+		threshold := bracket.UpperThreshold
 		rate := bracket.TaxRate
 
 		// income does not exceed final bracket

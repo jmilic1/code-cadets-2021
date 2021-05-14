@@ -17,9 +17,9 @@ func getTestCases() []testCase {
 	return []testCase{
 		{
 			taxBrackets: []calculator.TaxBracket{
-				{TaxRate: 0, Threshold: 1000},
-				{TaxRate: 0.1, Threshold: 5000},
-				{TaxRate: 0.2, Threshold: 10000},
+				{TaxRate: 0, UpperThreshold: 1000},
+				{TaxRate: 0.1, UpperThreshold: 5000},
+				{TaxRate: 0.2, UpperThreshold: 10000},
 			},
 			finalTaxRate: 0.3,
 			income:       7000,
@@ -29,8 +29,8 @@ func getTestCases() []testCase {
 		},
 		{
 			taxBrackets: []calculator.TaxBracket{
-				{TaxRate: 0.1, Threshold: 10000},
-				{TaxRate: 0.2, Threshold: 20000},
+				{TaxRate: 0.1, UpperThreshold: 10000},
+				{TaxRate: 0.2, UpperThreshold: 20000},
 			},
 			finalTaxRate: 0.3,
 			income:       20000,
@@ -40,8 +40,8 @@ func getTestCases() []testCase {
 		},
 		{
 			taxBrackets: []calculator.TaxBracket{
-				{TaxRate: 0.1, Threshold: 10000},
-				{TaxRate: 0.2, Threshold: 20000},
+				{TaxRate: 0.1, UpperThreshold: 10000},
+				{TaxRate: 0.2, UpperThreshold: 20000},
 			},
 			finalTaxRate: 0.3,
 			income:       25000,
@@ -51,11 +51,11 @@ func getTestCases() []testCase {
 		},
 		{
 			taxBrackets: []calculator.TaxBracket{
-				{TaxRate: 0.1, Threshold: 10000},
-				{TaxRate: 0.15, Threshold: 20000},
-				{TaxRate: 0.2, Threshold: 30000},
-				{TaxRate: 0.25, Threshold: 40000},
-				{TaxRate: 0.3, Threshold: 50000},
+				{TaxRate: 0.1, UpperThreshold: 10000},
+				{TaxRate: 0.15, UpperThreshold: 20000},
+				{TaxRate: 0.2, UpperThreshold: 30000},
+				{TaxRate: 0.25, UpperThreshold: 40000},
+				{TaxRate: 0.3, UpperThreshold: 50000},
 			},
 			finalTaxRate: 0.35,
 			income:       70000,
@@ -75,7 +75,7 @@ func getTestCases() []testCase {
 		},
 		{
 			taxBrackets: []calculator.TaxBracket{
-				{TaxRate: 0.1, Threshold: 1000},
+				{TaxRate: 0.1, UpperThreshold: 1000},
 			},
 			finalTaxRate: 0.2,
 			income:       7000,
@@ -85,7 +85,7 @@ func getTestCases() []testCase {
 		},
 		{
 			taxBrackets: []calculator.TaxBracket{
-				{TaxRate: 0.1, Threshold: 1000},
+				{TaxRate: 0.1, UpperThreshold: 1000},
 			},
 			finalTaxRate: 0.2,
 			income:       0,
@@ -94,7 +94,7 @@ func getTestCases() []testCase {
 		},
 		{
 			taxBrackets: []calculator.TaxBracket{
-				{TaxRate: 0.1, Threshold: 1000},
+				{TaxRate: 0.1, UpperThreshold: 1000},
 			},
 
 			expectingError: true,
