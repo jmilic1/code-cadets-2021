@@ -12,7 +12,20 @@ import (
 // main entrypoint for demonstrating progressive tax calculator
 func main() {
 
-	taxBrackets := []calculator.TaxBracket{{TaxRate: 0, Threshold: 1000}, {0.1, 5000}, {0.2, 10000}}
+	taxBrackets := []calculator.TaxBracket{
+		{
+			TaxRate:   0,
+			Threshold: 1000,
+		},
+		{
+			TaxRate:   0.1,
+			Threshold: 5000,
+		},
+		{
+			TaxRate:   0.2,
+			Threshold: 10000,
+		},
+	}
 	finalTaxRate := 0.3
 	income := 7000.0
 
