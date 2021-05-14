@@ -1,7 +1,7 @@
 package main
 
 import (
-	pokemonEncounterApi "code-cadets-2021/homework_1/Task-03/encounters"
+	pokemonEncounterApi "code-cadets-2021/homework_1/Task-03/encountersapi"
 	"encoding/json"
 	"flag"
 	"github.com/pkg/errors"
@@ -23,14 +23,14 @@ func main() {
 	encounters, err := pokemonEncounterApi.GetEncounters(*pokemon)
 	if err != nil {
 		log.Fatal(
-			errors.WithMessage(err, "error while getting encounters"),
+			errors.WithMessage(err, "error while getting encountersapi"),
 		)
 	}
 
 	output, err := json.Marshal(encounters)
 	if err != nil {
 		log.Fatal(
-			errors.WithMessage(err, "error while marshaling pokemon encounters"),
+			errors.WithMessage(err, "error while marshaling pokemon encountersapi"),
 		)
 	}
 

@@ -1,4 +1,4 @@
-package encounters
+package encountersapi
 
 import (
 	"encoding/json"
@@ -79,7 +79,7 @@ func fetchPokemon(url string) (pokemonData, error) {
 	return decodedPokemon, nil
 }
 
-// GetEncounters returns encounters for given pokemon
+// GetEncounters returns encountersapi for given pokemon
 func GetEncounters(pokemon string) (PokemonEncounters, error) {
 	u, err := url.Parse(pokeApiUrl)
 	if err != nil {
