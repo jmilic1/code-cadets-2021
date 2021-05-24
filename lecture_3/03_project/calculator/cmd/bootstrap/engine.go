@@ -59,8 +59,8 @@ func newEventSettledConsumer(channel rabbitmq.Channel) *rabbitmq.EventSettledCon
 	return betCalculatedConsumer
 }
 
-func newConsumer(betReceivedConsumer consumer.BetConsumer, betCalculatedConsumer consumer.EventSettledConsumer) *consumer.Consumer {
-	return consumer.New(betReceivedConsumer, betCalculatedConsumer)
+func newConsumer(betConsumer consumer.BetConsumer, eventSettledConsumer consumer.EventSettledConsumer) *consumer.Consumer {
+	return consumer.New(betConsumer, eventSettledConsumer)
 }
 
 func newBetMapper() *mappers.BetCalculatedMapper {
@@ -71,8 +71,8 @@ func newBetRepository(dbExecutor sqlite.DatabaseExecutor, betMapper sqlite.BetCa
 	return sqlite.NewBetCalculatedRepository(dbExecutor, betMapper)
 }
 
-func newHandler(betRepository handler.BetCalculatedRepository) *handler.Handler {
-	return handler.New(betRepository)
+func newHandler(betCalculatedRepository handler.BetCalculatedRepository) *handler.Handler {
+	return handler.New(betCalculatedRepository)
 }
 
 func newBetCalculatedPublisher(channel rabbitmq.Channel) *rabbitmq.BetCalculatedPublisher {

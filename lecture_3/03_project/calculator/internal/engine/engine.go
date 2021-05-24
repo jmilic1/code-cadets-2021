@@ -40,23 +40,23 @@ func (e *Engine) Start(ctx context.Context) {
 }
 
 func (e *Engine) processBets(ctx context.Context) error {
-	consumedBetsReceived, err := e.consumer.ConsumeBets(ctx)
+	consumedBets, err := e.consumer.ConsumeBets(ctx)
 	if err != nil {
 		return err
 	}
 
-	e.handler.HandleBets(ctx, consumedBetsReceived)
+	e.handler.HandleBets(ctx, consumedBets)
 
 	return nil
 }
 
 func (e *Engine) processEventsSettled(ctx context.Context) error {
-	consumedBetsCalculated, err := e.consumer.ConsumeEventsSettled(ctx)
+	consumedEventsSettled, err := e.consumer.ConsumeEventsSettled(ctx)
 	if err != nil {
 		return err
 	}
 
-	resultingBets := e.handler.HandleEventsSettled(ctx, consumedBetsCalculated)
+	resultingBets := e.handler.HandleEventsSettled(ctx, consumedEventsSettled)
 	e.publisher.PublishBetsCalculated(ctx, resultingBets)
 
 	return nil
