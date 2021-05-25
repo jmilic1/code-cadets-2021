@@ -10,13 +10,13 @@ import (
 
 // Handler handles bets received and bets calculated.
 type Handler struct {
-	betCalculatedRepository BetCalculatedRepository
+	betRepository BetRepository
 }
 
 // New creates and returns a new Handler.
-func New(betRepository BetCalculatedRepository) *Handler {
+func New(betRepository BetRepository) *Handler {
 	return &Handler{
-		betCalculatedRepository: betRepository,
+		betRepository: betRepository,
 	}
 }
 
@@ -28,28 +28,28 @@ func (h *Handler) HandleBets(
 	go func() {
 		for bet := range bets {
 			// Calculate the domain bet based on the incoming bet.
-			domainBet := domainmodels.BetCalculated{
+			domainBet := domainmodels.Bet{
 				Id:                   bet.Id,
 				SelectionId:          bet.SelectionId,
 				SelectionCoefficient: bet.SelectionCoefficient,
 				Payment:              bet.Payment,
 			}
 
-			_, found, err := h.betCalculatedRepository.GetBetCalculatedByID(ctx, domainBet.Id)
+			_, found, err := h.betRepository.GetBetByID(ctx, domainBet.Id)
 			if err != nil {
 				log.Println("Failed to query bet, error: ", err)
 				continue
 			}
 			if !found {
 				log.Println("Inserting new bet")
-				err := h.betCalculatedRepository.InsertBetCalculated(ctx, domainBet)
+				err := h.betRepository.InsertBet(ctx, domainBet)
 				if err != nil {
 					log.Println("Failed to insert bet, error: ", err)
 					continue
 				}
 			} else {
 				log.Println("Updating bet")
-				err := h.betCalculatedRepository.UpdateBetCalculated(ctx, domainBet)
+				err := h.betRepository.UpdateBet(ctx, domainBet)
 				if err != nil {
 					log.Println("Failed to insert bet, error: ", err)
 					continue
@@ -73,7 +73,7 @@ func (h *Handler) HandleEventsSettled(
 			log.Println("Processing settled event, eventId:", eventUpdate.Id)
 
 			// Fetch the domain bet.
-			domainBets, exists, err := h.betCalculatedRepository.GetBetBySelectionID(ctx, eventUpdate.Id)
+			domainBets, exists, err := h.betRepository.GetBetBySelectionID(ctx, eventUpdate.Id)
 			if err != nil {
 				log.Println("Failed to fetch bets which should be updated, error: ", err)
 				continue

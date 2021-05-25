@@ -1,7 +1,7 @@
 package models
 
-// BetCalculated is a storage model representation of a calculated bet.
-type BetCalculated struct {
+// Bet is a storage model representation of a calculated bet.
+type Bet struct {
 	Id                   string
 	SelectionId          string
 	SelectionCoefficient int

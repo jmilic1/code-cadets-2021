@@ -12,7 +12,7 @@ import (
 )
 
 func newBetConsumer(channel rabbitmq.Channel) *rabbitmq.BetConsumer {
-	betReceivedConsumer, err := rabbitmq.NewBetConsumer(
+	betConsumer, err := rabbitmq.NewBetConsumer(
 		channel,
 		rabbitmq.ConsumerConfig{
 			Queue:             config.Cfg.Rabbit.ConsumerBetQueue,
@@ -21,7 +21,7 @@ func newBetConsumer(channel rabbitmq.Channel) *rabbitmq.BetConsumer {
 			DeclareExclusive:  config.Cfg.Rabbit.DeclareExclusive,
 			DeclareNoWait:     config.Cfg.Rabbit.DeclareNoWait,
 			DeclareArgs:       nil,
-			ConsumerName:      config.Cfg.Rabbit.ConsumerBetReceivedName,
+			ConsumerName:      config.Cfg.Rabbit.ConsumerBetName,
 			AutoAck:           config.Cfg.Rabbit.ConsumerAutoAck,
 			Exclusive:         config.Cfg.Rabbit.ConsumerExclusive,
 			NoLocal:           config.Cfg.Rabbit.ConsumerNoLocal,
@@ -32,11 +32,11 @@ func newBetConsumer(channel rabbitmq.Channel) *rabbitmq.BetConsumer {
 	if err != nil {
 		panic(err)
 	}
-	return betReceivedConsumer
+	return betConsumer
 }
 
 func newEventSettledConsumer(channel rabbitmq.Channel) *rabbitmq.EventSettledConsumer {
-	betCalculatedConsumer, err := rabbitmq.NewEventSettledConsumer(
+	eventSettledConsumer, err := rabbitmq.NewEventSettledConsumer(
 		channel,
 		rabbitmq.ConsumerConfig{
 			Queue:             config.Cfg.Rabbit.ConsumerEventUpdatesQueue,
@@ -45,7 +45,7 @@ func newEventSettledConsumer(channel rabbitmq.Channel) *rabbitmq.EventSettledCon
 			DeclareExclusive:  config.Cfg.Rabbit.DeclareExclusive,
 			DeclareNoWait:     config.Cfg.Rabbit.DeclareNoWait,
 			DeclareArgs:       nil,
-			ConsumerName:      config.Cfg.Rabbit.ConsumerBetCalculatedName,
+			ConsumerName:      config.Cfg.Rabbit.ConsumerEventsSettledName,
 			AutoAck:           config.Cfg.Rabbit.ConsumerAutoAck,
 			Exclusive:         config.Cfg.Rabbit.ConsumerExclusive,
 			NoLocal:           config.Cfg.Rabbit.ConsumerNoLocal,
@@ -56,22 +56,22 @@ func newEventSettledConsumer(channel rabbitmq.Channel) *rabbitmq.EventSettledCon
 	if err != nil {
 		panic(err)
 	}
-	return betCalculatedConsumer
+	return eventSettledConsumer
 }
 
 func newConsumer(betConsumer consumer.BetConsumer, eventSettledConsumer consumer.EventSettledConsumer) *consumer.Consumer {
 	return consumer.New(betConsumer, eventSettledConsumer)
 }
 
-func newBetMapper() *mappers.BetCalculatedMapper {
-	return mappers.NewBetCalculatedMapper()
+func newBetMapper() *mappers.BetMapper {
+	return mappers.NewBetMapper()
 }
 
-func newBetRepository(dbExecutor sqlite.DatabaseExecutor, betMapper sqlite.BetCalculatedMapper) *sqlite.BetCalculatedRepository {
-	return sqlite.NewBetCalculatedRepository(dbExecutor, betMapper)
+func newBetRepository(dbExecutor sqlite.DatabaseExecutor, betMapper sqlite.BetMapper) *sqlite.BetRepository {
+	return sqlite.NewBetRepository(dbExecutor, betMapper)
 }
 
-func newHandler(betCalculatedRepository handler.BetCalculatedRepository) *handler.Handler {
+func newHandler(betCalculatedRepository handler.BetRepository) *handler.Handler {
 	return handler.New(betCalculatedRepository)
 }
 
