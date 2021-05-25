@@ -9,7 +9,7 @@ import (
 	"github.com/superbet-group/code-cadets-2021/lecture_3/03_project/calculator/internal/infrastructure/rabbitmq/models"
 )
 
-// EventSettledConsumer consumes calculated bets from the desired RabbitMQ queue.
+// EventSettledConsumer consumes settled events from the desired RabbitMQ queue.
 type EventSettledConsumer struct {
 	channel Channel
 	config  ConsumerConfig
