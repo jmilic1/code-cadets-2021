@@ -15,8 +15,8 @@ type Config struct {
 type rabbitConfig struct {
 	ConsumerEventUpdatesQueue   string `split_words:"true" required:"true"`
 	PublisherBetCalculatedQueue string `split_words:"true" required:"true"`
-	ConsumerBetReceivedName     string `split_words:"true" default:"controllerreceived"`
-	ConsumerBetCalculatedName   string `split_words:"true" default:"controllercalculated"`
+	ConsumerEventUpdatesName    string `split_words:"true" default:"calculatorevents"`
+	ConsumerBetName             string `split_words:"true" default:"calculatorbets"`
 	ConsumerAutoAck             bool   `split_words:"true" default:"true"`
 	ConsumerExclusive           bool   `split_words:"true" default:"false"`
 	ConsumerNoLocal             bool   `split_words:"true" default:"false"`
