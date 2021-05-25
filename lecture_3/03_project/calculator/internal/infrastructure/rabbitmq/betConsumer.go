@@ -16,7 +16,7 @@ type BetConsumer struct {
 	config  ConsumerConfig
 }
 
-// NewBetConsumer creates and returns a new BetCalculatedConsumer.
+// NewBetConsumer creates and returns a new BetConsumer.
 func NewBetConsumer(channel Channel, config ConsumerConfig) (*BetConsumer, error) {
 	_, err := channel.QueueDeclare(
 		config.Queue,
