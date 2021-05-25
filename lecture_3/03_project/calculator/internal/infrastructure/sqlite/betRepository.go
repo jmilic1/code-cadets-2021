@@ -113,7 +113,7 @@ func (r *BetRepository) queryGetBetByID(ctx context.Context, id string) (storage
 	}, nil
 }
 
-func (r *BetRepository) GetBetBySelectionID(ctx context.Context, selectionId string) ([]domainmodels.Bet, bool, error) {
+func (r *BetRepository) GetBetsBySelectionID(ctx context.Context, selectionId string) ([]domainmodels.Bet, bool, error) {
 	storageBets, err := r.queryGetBetsBySelectionID(ctx, selectionId)
 	if err == sql.ErrNoRows {
 		return []domainmodels.Bet{}, false, nil

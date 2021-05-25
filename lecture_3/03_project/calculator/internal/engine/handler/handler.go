@@ -73,7 +73,7 @@ func (h *Handler) HandleEventsSettled(
 			log.Println("Processing settled event, eventId:", eventUpdate.Id)
 
 			// Fetch the domain bet.
-			domainBets, exists, err := h.betRepository.GetBetBySelectionID(ctx, eventUpdate.Id)
+			domainBets, exists, err := h.betRepository.GetBetsBySelectionID(ctx, eventUpdate.Id)
 			if err != nil {
 				log.Println("Failed to fetch bets which should be updated, error: ", err)
 				continue
