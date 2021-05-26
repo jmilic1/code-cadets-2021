@@ -113,13 +113,13 @@ func (r *BetRepository) queryGetBetByID(ctx context.Context, id string) (storage
 	}, nil
 }
 
-func (r *BetRepository) GetBetsBySelectionID(ctx context.Context, selectionId string) ([]domainmodels.Bet, bool, error) {
+func (r *BetRepository) GetBetsBySelectionID(ctx context.Context, selectionId string) ([]domainmodels.Bet, error) {
 	storageBets, err := r.queryGetBetsBySelectionID(ctx, selectionId)
 	if err == sql.ErrNoRows {
-		return []domainmodels.Bet{}, false, nil
+		return []domainmodels.Bet{}, nil
 	}
 	if err != nil {
-		return []domainmodels.Bet{}, false, errors.Wrap(err, "bet repository failed to get a bets with selection id "+selectionId)
+		return []domainmodels.Bet{}, errors.Wrap(err, "bet repository failed to get a bets with selection id "+selectionId)
 	}
 
 	var domainBets []domainmodels.Bet
@@ -129,7 +129,7 @@ func (r *BetRepository) GetBetsBySelectionID(ctx context.Context, selectionId st
 		domainBets = append(domainBets, domainBet)
 	}
 
-	return domainBets, true, nil
+	return domainBets, nil
 }
 
 func (r *BetRepository) queryGetBetsBySelectionID(ctx context.Context, selectionId string) ([]storagemodels.Bet, error) {
