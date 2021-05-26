@@ -1,6 +1,6 @@
 package models
 
-// Bet represents a domain model representation of a calculated bet.
+// Bet represents a domain model representation of a bet.
 type Bet struct {
 	Id                   string
 	SelectionId          string
