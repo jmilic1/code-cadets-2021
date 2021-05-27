@@ -82,7 +82,7 @@ func (h *Handler) HandleBetsCalculated(
 		defer close(resultingBets)
 
 		for betCalculated := range betsCalculated {
-			log.Println("Processing bet calculated, betId:", betCalculated.Id)
+			log.Printf("Processing bet calculated, betId: %s. Has won status: %t\n", betCalculated.Id, betCalculated.Payout != 0)
 
 			// Fetch the domain bet.
 			domainBet, exists, err := h.betRepository.GetBetByID(ctx, betCalculated.Id)
