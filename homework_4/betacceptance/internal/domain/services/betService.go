@@ -1,7 +1,7 @@
 package services
 
 import (
-	requests "github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/api/controllers/models"
+	requestmodels "github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/api/controllers/models"
 	queueDto "github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/infrastructure/rabbitmq/models"
 )
 
@@ -20,7 +20,7 @@ func NewBetService(betReceivedPublisher BetReceivedPublisher, idGenerator IdGene
 }
 
 // SendBet sends received bet to the queue.
-func (b *BetService) SendBet(request requests.BetRequestDto) error {
+func (b *BetService) SendBet(request requestmodels.BetRequestDto) error {
 	id, err := b.idGenerator.GetRandomUUID()
 	if err != nil {
 		return err

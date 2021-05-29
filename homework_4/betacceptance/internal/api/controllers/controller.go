@@ -4,7 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	requests "github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/api/controllers/models"
+
+	requestmodels "github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/api/controllers/models"
 )
 
 // Controller implements handlers for web server requests.
@@ -24,7 +25,7 @@ func NewController(betRequestValidator BetRequestValidator, betService BetServic
 // PostBet handles post bet request.
 func (c *Controller) PostBet() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var betRequest requests.BetRequestDto
+		var betRequest requestmodels.BetRequestDto
 		err := ctx.ShouldBindJSON(&betRequest)
 		if err != nil {
 			ctx.String(http.StatusBadRequest, "update request is not valid.")
