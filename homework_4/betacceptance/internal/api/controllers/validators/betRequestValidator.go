@@ -14,11 +14,12 @@ func NewBetRequestValidator() *BetRequestValidator {
 	return &BetRequestValidator{}
 }
 
-// isWithinRangeInclusive checks if the given value is within given range [from, to]
+// isWithinRangeInclusive checks if given value is within given range [from, to]
 func (b *BetRequestValidator) isWithinRangeInclusive(value, from, to float64) bool {
 	return value >= from && value <= to
 }
 
+// isLessThanInclusive checks if given value is less than or equal to given upper bound
 func (b *BetRequestValidator) isLessThanInclusive(value, to float64) bool {
 	return value <= to
 }
