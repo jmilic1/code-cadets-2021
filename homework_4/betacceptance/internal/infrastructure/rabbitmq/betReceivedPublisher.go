@@ -2,14 +2,16 @@ package rabbitmq
 
 import (
 	"encoding/json"
-	"github.com/streadway/amqp"
-	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/infrastructure/rabbitmq/models"
 	"log"
+
+	"github.com/streadway/amqp"
+
+	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/infrastructure/rabbitmq/models"
 )
 
 const contentTypeTextPlain = "text/plain"
 
-// BetReceivedPublisher handles event update queue publishing.
+// BetReceivedPublisher handles received bets queue publishing.
 type BetReceivedPublisher struct {
 	exchange  string
 	queueName string
@@ -18,8 +20,8 @@ type BetReceivedPublisher struct {
 	publisher QueuePublisher
 }
 
-// NewEventUpdatePublisher create a new instance of BetReceivedPublisher.
-func NewEventUpdatePublisher(
+// NewBetReceivedPublisher creates a new instance of BetReceivedPublisher.
+func NewBetReceivedPublisher(
 	exchange string,
 	queueName string,
 	mandatory bool,

@@ -2,13 +2,13 @@ package bootstrap
 
 import (
 	"github.com/streadway/amqp"
-	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/infrastructure"
 
 	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/cmd/config"
 	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/api"
 	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/api/controllers"
 	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/api/controllers/validators"
 	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/domain/services"
+	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/infrastructure"
 	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/infrastructure/rabbitmq"
 )
 
@@ -21,7 +21,7 @@ func newIdGenerator() *infrastructure.IdGenerator {
 }
 
 func newBetReceivedPublisher(publisher rabbitmq.QueuePublisher) *rabbitmq.BetReceivedPublisher {
-	return rabbitmq.NewEventUpdatePublisher(
+	return rabbitmq.NewBetReceivedPublisher(
 		config.Cfg.Rabbit.PublisherExchange,
 		config.Cfg.Rabbit.PublisherBetReceivedQueue,
 		config.Cfg.Rabbit.PublisherMandatory,

@@ -4,8 +4,7 @@ import (
 	uuid "github.com/nu7hatch/gouuid"
 )
 
-type IdGenerator struct {
-}
+type IdGenerator struct{}
 
 func NewIdGenerator() *IdGenerator {
 	return &IdGenerator{}

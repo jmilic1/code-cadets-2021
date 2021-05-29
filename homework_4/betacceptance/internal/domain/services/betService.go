@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/api/controllers/models"
-	models2 "github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/infrastructure/rabbitmq/models"
+	requests "github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/api/controllers/models"
+	queueDto "github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/infrastructure/rabbitmq/models"
 )
 
 // BetService implements event related functions.
@@ -20,13 +20,13 @@ func NewBetService(betReceivedPublisher BetReceivedPublisher, idGenerator IdGene
 }
 
 // SendBet sends received bet to the queue.
-func (b BetService) SendBet(request models.BetRequestDto) error {
+func (b *BetService) SendBet(request requests.BetRequestDto) error {
 	id, err := b.idGenerator.GetRandomUUID()
 	if err != nil {
 		return err
 	}
 
-	betQueueDto := models2.BetQueueDto{
+	betQueueDto := queueDto.BetQueueDto{
 		Id:                   id,
 		CustomerId:           request.CustomerId,
 		SelectionId:          request.SelectionId,
