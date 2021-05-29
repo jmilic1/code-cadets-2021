@@ -41,7 +41,7 @@ func (c *Controller) GetBet() gin.HandlerFunc {
 	}
 }
 
-// GetBetsByCustomerId handles get bet customer Id request.
+// GetBetsByCustomerId handles get bet by customerId request.
 func (c *Controller) GetBetsByCustomerId() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		customerId := ctx.Param(idString)
@@ -59,6 +59,7 @@ func (c *Controller) GetBetsByCustomerId() gin.HandlerFunc {
 	}
 }
 
+// GetBetsByStatus handles get bet by status request
 func (c *Controller) GetBetsByStatus() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		status := ctx.DefaultQuery(statusString, statusDefaultValue)

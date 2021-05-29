@@ -20,7 +20,7 @@ func NewBetService(betRepository BetRepository, betMapper BetMapper) *BetService
 	}
 }
 
-// GetBet fetches and returns a bet from repository based on given id.
+// GetBet fetches and returns a bet based on given id.
 func (b *BetService) GetBet(ctx *gin.Context, betId string) (dto.BetResultDto, bool, error) {
 	domainBet, found, err := b.betRepository.GetBetById(ctx, betId)
 	if err != nil {
@@ -31,6 +31,7 @@ func (b *BetService) GetBet(ctx *gin.Context, betId string) (dto.BetResultDto, b
 	return dtoBet, found, nil
 }
 
+// GetBetsByCustomerId fetches and returns bets which are owned by given customerId
 func (b *BetService) GetBetsByCustomerId(ctx *gin.Context, customerId string) ([]dto.BetResultDto, error) {
 	domainBets, err := b.betRepository.GetBetsByCustomerId(ctx, customerId)
 	if err != nil {
@@ -46,6 +47,7 @@ func (b *BetService) GetBetsByCustomerId(ctx *gin.Context, customerId string) ([
 	return dtoBets, nil
 }
 
+// GetBetsByStatus fetches and returns bets which have given status
 func (b *BetService) GetBetsByStatus(ctx *gin.Context, status string) ([]dto.BetResultDto, error) {
 	domainBets, err := b.betRepository.GetBetsByStatus(ctx, status)
 	if err != nil {

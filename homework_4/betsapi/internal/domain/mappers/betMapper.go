@@ -7,8 +7,7 @@ import (
 )
 
 // BetMapper maps storage bets to domain bets and vice versa.
-type BetMapper struct {
-}
+type BetMapper struct{}
 
 // NewBetMapper creates and returns a new BetMapper.
 func NewBetMapper() *BetMapper {

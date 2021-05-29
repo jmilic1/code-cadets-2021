@@ -68,7 +68,8 @@ func (b *BetRepository) GetBetById(ctx context.Context, id string) (domainmodels
 	}
 
 	domainBet := b.betMapper.MapStorageBetToDomainBet(storageBet)
-	return domainBet, domainBet != domainmodels.Bet{}, nil
+	exists := domainBet != domainmodels.Bet{}
+	return domainBet, exists, nil
 }
 
 func (b *BetRepository) queryGetBetById(ctx context.Context, id string) (storagemodels.Bet, error) {
@@ -91,7 +92,7 @@ func (b *BetRepository) GetBetsByCustomerId(ctx context.Context, customerId stri
 		return []domainmodels.Bet{}, nil
 	}
 	if err != nil {
-		return []domainmodels.Bet{}, errors.Wrap(err, "bet repository failed to get a bet with id "+customerId)
+		return []domainmodels.Bet{}, errors.Wrap(err, "bet repository failed to get a bet with customerId "+customerId)
 	}
 
 	var domainBets []domainmodels.Bet
