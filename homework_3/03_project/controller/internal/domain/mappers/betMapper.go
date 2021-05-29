@@ -11,7 +11,7 @@ import (
 type BetMapper struct {
 }
 
-// NewBetStorageMapper creates and returns a new BetMapper.
+// NewBetMapper creates and returns a new BetMapper.
 func NewBetMapper() *BetMapper {
 	return &BetMapper{}
 }
