@@ -2,9 +2,9 @@ package services
 
 import (
 	dto "github.com/superbet-group/code-cadets-2021/homework_4/betsapi/internal/api/controllers/models"
-	domainmodels "github.com/superbet-group/code-cadets-2021/homework_4/betsapi/internal/domain/models"
+	storagemodels "github.com/superbet-group/code-cadets-2021/homework_4/betsapi/internal/infrastructure/sqlite/models"
 )
 
 type BetMapper interface {
-	MapDomainBetToDto(domainBet domainmodels.Bet) dto.BetResultDto
+	MapStorageBetToDto(domainBet storagemodels.Bet) dto.BetResultDto
 }

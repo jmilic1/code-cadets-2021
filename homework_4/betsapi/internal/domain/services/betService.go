@@ -27,7 +27,7 @@ func (b *BetService) GetBet(ctx *gin.Context, betId string) (dto.BetResultDto, b
 		return dto.BetResultDto{}, false, err
 	}
 
-	dtoBet := b.betMapper.MapDomainBetToDto(domainBet)
+	dtoBet := b.betMapper.MapStorageBetToDto(domainBet)
 	return dtoBet, found, nil
 }
 
@@ -40,7 +40,7 @@ func (b *BetService) GetBetsByCustomerId(ctx *gin.Context, customerId string) ([
 
 	var dtoBets []dto.BetResultDto
 	for _, bet := range domainBets {
-		dtoBet := b.betMapper.MapDomainBetToDto(bet)
+		dtoBet := b.betMapper.MapStorageBetToDto(bet)
 		dtoBets = append(dtoBets, dtoBet)
 	}
 
@@ -56,7 +56,7 @@ func (b *BetService) GetBetsByStatus(ctx *gin.Context, status string) ([]dto.Bet
 
 	var dtoBets []dto.BetResultDto
 	for _, bet := range domainBets {
-		dtoBet := b.betMapper.MapDomainBetToDto(bet)
+		dtoBet := b.betMapper.MapStorageBetToDto(bet)
 		dtoBets = append(dtoBets, dtoBet)
 	}
 
