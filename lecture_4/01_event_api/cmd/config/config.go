@@ -16,7 +16,7 @@ type Config struct {
 
 type apiConfig struct {
 	ReadWriteTimeoutMs int `split_words:"true" default:"10000"`
-	Port               int `split_words:"true" default:"8080"`
+	Port               int `split_words:"true" default:"8081"`
 }
 
 type rabbitConfig struct {
