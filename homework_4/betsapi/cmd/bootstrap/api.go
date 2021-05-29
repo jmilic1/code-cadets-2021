@@ -13,8 +13,8 @@ func newBetMapper() *mappers.BetMapper {
 	return mappers.NewBetMapper()
 }
 
-func newBetRepository(dbExecutor sqlite.DatabaseExecutor, betMapper sqlite.BetMapper) *sqlite.BetRepository {
-	return sqlite.NewBetRepository(dbExecutor, betMapper)
+func newBetRepository(dbExecutor sqlite.DatabaseExecutor) *sqlite.BetRepository {
+	return sqlite.NewBetRepository(dbExecutor)
 }
 
 func newBetService(betRepository services.BetRepository, betMapper services.BetMapper) *services.BetService {
@@ -28,7 +28,7 @@ func newController(betService controllers.BetService) *controllers.Controller {
 // Api bootstraps the http server.
 func Api(dbExecutor sqlite.DatabaseExecutor) *api.WebServer {
 	betMapper := newBetMapper()
-	betRepository := newBetRepository(dbExecutor, betMapper)
+	betRepository := newBetRepository(dbExecutor)
 	betService := newBetService(betRepository, betMapper)
 	controller := newController(betService)
 

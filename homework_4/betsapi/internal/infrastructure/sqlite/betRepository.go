@@ -6,21 +6,18 @@ import (
 
 	"github.com/pkg/errors"
 
-	domainmodels "github.com/superbet-group/code-cadets-2021/homework_4/betsapi/internal/domain/models"
 	storagemodels "github.com/superbet-group/code-cadets-2021/homework_4/betsapi/internal/infrastructure/sqlite/models"
 )
 
 // BetRepository provides methods that operate on bets SQLite database.
 type BetRepository struct {
 	dbExecutor DatabaseExecutor
-	betMapper  BetMapper
 }
 
 // NewBetRepository creates and returns a new BetRepository.
-func NewBetRepository(dbExecutor DatabaseExecutor, betMapper BetMapper) *BetRepository {
+func NewBetRepository(dbExecutor DatabaseExecutor) *BetRepository {
 	return &BetRepository{
 		dbExecutor: dbExecutor,
-		betMapper:  betMapper,
 	}
 }
 
@@ -58,18 +55,17 @@ func (b *BetRepository) readBet(row *sql.Rows) (storagemodels.Bet, error) {
 
 // GetBetById fetches a bet from the database and returns it. The second returned value indicates
 // whether the bet exists in DB. If the bet does not exist, an error will not be returned.
-func (b *BetRepository) GetBetById(ctx context.Context, id string) (domainmodels.Bet, bool, error) {
+func (b *BetRepository) GetBetById(ctx context.Context, id string) (storagemodels.Bet, bool, error) {
 	storageBet, err := b.queryGetBetById(ctx, id)
 	if err == sql.ErrNoRows {
-		return domainmodels.Bet{}, false, nil
+		return storagemodels.Bet{}, false, nil
 	}
 	if err != nil {
-		return domainmodels.Bet{}, false, errors.Wrap(err, "bet repository failed to get a bet with id "+id)
+		return storagemodels.Bet{}, false, errors.Wrap(err, "bet repository failed to get a bet with id "+id)
 	}
 
-	domainBet := b.betMapper.MapStorageBetToDomainBet(storageBet)
-	exists := domainBet != domainmodels.Bet{}
-	return domainBet, exists, nil
+	exists := storageBet != storagemodels.Bet{}
+	return storageBet, exists, nil
 }
 
 func (b *BetRepository) queryGetBetById(ctx context.Context, id string) (storagemodels.Bet, error) {
@@ -86,23 +82,16 @@ func (b *BetRepository) queryGetBetById(ctx context.Context, id string) (storage
 
 // GetBetsByCustomerId fetches bets from database which match given customerId.
 // If bets do not exist, an error will not be returned.
-func (b *BetRepository) GetBetsByCustomerId(ctx context.Context, customerId string) ([]domainmodels.Bet, error) {
+func (b *BetRepository) GetBetsByCustomerId(ctx context.Context, customerId string) ([]storagemodels.Bet, error) {
 	storageBets, err := b.queryGetBetsByCustomerId(ctx, customerId)
 	if err == sql.ErrNoRows {
-		return []domainmodels.Bet{}, nil
+		return []storagemodels.Bet{}, nil
 	}
 	if err != nil {
-		return []domainmodels.Bet{}, errors.Wrap(err, "bet repository failed to get a bet with customerId "+customerId)
+		return []storagemodels.Bet{}, errors.Wrap(err, "bet repository failed to get a bet with customerId "+customerId)
 	}
 
-	var domainBets []domainmodels.Bet
-
-	for _, bet := range storageBets {
-		domainBet := b.betMapper.MapStorageBetToDomainBet(bet)
-		domainBets = append(domainBets, domainBet)
-	}
-
-	return domainBets, nil
+	return storageBets, nil
 }
 
 func (b *BetRepository) queryGetBetsByCustomerId(ctx context.Context, customerId string) ([]storagemodels.Bet, error) {
@@ -130,23 +119,16 @@ func (b *BetRepository) queryGetBetsByCustomerId(ctx context.Context, customerId
 
 // GetBetsByStatus fetches bets from database which match given status.
 // If bets do not exist, an error will not be returned.
-func (b *BetRepository) GetBetsByStatus(ctx context.Context, status string) ([]domainmodels.Bet, error) {
+func (b *BetRepository) GetBetsByStatus(ctx context.Context, status string) ([]storagemodels.Bet, error) {
 	storageBets, err := b.queryGetBetsByStatus(ctx, status)
 	if err == sql.ErrNoRows {
-		return []domainmodels.Bet{}, nil
+		return []storagemodels.Bet{}, nil
 	}
 	if err != nil {
-		return []domainmodels.Bet{}, errors.Wrap(err, "bet repository failed to get a bet with id "+status)
+		return []storagemodels.Bet{}, errors.Wrap(err, "bet repository failed to get a bet with id "+status)
 	}
 
-	var domainBets []domainmodels.Bet
-
-	for _, bet := range storageBets {
-		domainBet := b.betMapper.MapStorageBetToDomainBet(bet)
-		domainBets = append(domainBets, domainBet)
-	}
-
-	return domainBets, nil
+	return storageBets, nil
 }
 
 func (b *BetRepository) queryGetBetsByStatus(ctx context.Context, status string) ([]storagemodels.Bet, error) {
