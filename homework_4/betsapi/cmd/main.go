@@ -17,7 +17,7 @@ func main() {
 	db := bootstrap.Sqlite()
 	api := bootstrap.Api(db)
 
-	log.Println("Bootstrap finished. Bets is starting")
+	log.Println("Bootstrap finished. Bets Api is starting")
 
 	tasks.RunTasks(signalHandler, api)
 
