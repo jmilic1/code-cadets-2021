@@ -46,11 +46,11 @@ func main() {
 
 	q, err := ch.QueueDeclare(
 		"event-updates", // name
-		true,                 // durable
-		false,                // delete when unused
-		false,                // exclusive
-		false,                // no-wait
-		nil,                  // arguments
+		true,            // durable
+		false,           // delete when unused
+		false,           // exclusive
+		false,           // no-wait
+		nil,             // arguments
 	)
 	failOnError(err, "failed to declare a queue")
 
@@ -79,7 +79,7 @@ func main() {
 		}
 
 		eventUpdate := &eventUpdateDto{
-			Id: selectionId,
+			Id:      selectionId,
 			Outcome: outcome,
 		}
 

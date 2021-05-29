@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/pkg/errors"
 	"log"
 
 	"code-cadets-2021/lecture_1/07_testing/filter"
@@ -18,7 +19,7 @@ func main() {
 
 	numbers, err := filter.GetDivisibleFromRange(countFrom, countTo, divisor)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(errors.WithMessage(err, "error while calculating tax"))
 	}
 
 	log.Printf("%v", numbers)
