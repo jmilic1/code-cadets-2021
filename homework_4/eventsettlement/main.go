@@ -14,6 +14,8 @@ import (
 
 const activeBetsPath = "http://127.0.0.1:8082/bets?status=active"
 const eventPath = "http://127.0.0.1:8081/event/update"
+const lostOutcome = "lost"
+const wonOutcome = "won"
 
 type betDto struct {
 	Id                   string  `json:"id"`
@@ -33,24 +35,10 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	client := http.Client{Timeout: time.Second * 5}
-	response, err := client.Get(activeBetsPath)
+	decodedBets, err := getActiveBets(client)
 	if err != nil {
 		log.Fatal(
-			errors.WithMessage(err, "error while sending GET request to Bets Api"),
-		)
-	}
-	bodyContent, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Fatal(
-			errors.WithMessage(err, "error while reading response from Bets Api"),
-		)
-	}
-
-	var decodedBets []betDto
-	err = json.Unmarshal(bodyContent, &decodedBets)
-	if err != nil {
-		log.Fatal(
-			errors.WithMessage(err, "error while decoding response from Bets Api"),
+			errors.WithMessage(err, "error while fetching active bets"),
 		)
 	}
 
@@ -62,9 +50,9 @@ func main() {
 	for selectionId := range selectionIds {
 		var outcome string
 		if rand.Float64() > 0.5 {
-			outcome = "lost"
+			outcome = lostOutcome
 		} else {
-			outcome = "won"
+			outcome = wonOutcome
 		}
 
 		eventUpdate := &eventUpdateDto{
@@ -72,19 +60,47 @@ func main() {
 			Outcome: outcome,
 		}
 
-		eventUpdateJson, err := json.Marshal(eventUpdate)
+		err = sendEventUpdate(eventUpdate, client)
 		if err != nil {
 			log.Fatal(
-				errors.WithMessage(err, "failed to marshal an event update"),
+				errors.WithMessage(err, "error while sending event updates"),
 			)
 		}
-
-		reader := bytes.NewReader(eventUpdateJson)
-
-		post, err := client.Post(eventPath, "text/json", reader)
-		if err != nil {
-			log.Fatal(err)
-		}
-		log.Println(post)
 	}
+}
+
+// getActiveBets retrieves bets which have active status from Bets Api.
+func getActiveBets(client http.Client) ([]betDto, error) {
+	response, err := client.Get(activeBetsPath)
+	if err != nil {
+		return nil, errors.WithMessage(err, "error while sending GET request to Bets Api")
+	}
+
+	bodyContent, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, errors.WithMessage(err, "error while reading response from Bets Api")
+	}
+
+	var decodedBets []betDto
+	err = json.Unmarshal(bodyContent, &decodedBets)
+	if err != nil {
+		return nil, errors.WithMessage(err, "error while decoding response from Bets Api")
+	}
+
+	return decodedBets, nil
+}
+
+func sendEventUpdate(eventUpdate *eventUpdateDto, client http.Client) error {
+	eventUpdateJson, err := json.Marshal(eventUpdate)
+	if err != nil {
+		return errors.WithMessage(err, "failed to marshal an event update")
+	}
+
+	reader := bytes.NewReader(eventUpdateJson)
+
+	_, err = client.Post(eventPath, "text/json", reader)
+	if err != nil {
+		return errors.WithMessage(err, "error while sending POST request to event Api")
+	}
+	return nil
 }
