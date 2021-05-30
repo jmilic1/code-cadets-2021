@@ -14,16 +14,6 @@ func NewBetRequestValidator() *BetRequestValidator {
 	return &BetRequestValidator{}
 }
 
-// isWithinRangeInclusive checks if given value is within given range [from, to]
-func (b *BetRequestValidator) isWithinRangeInclusive(value, from, to float64) bool {
-	return value >= from && value <= to
-}
-
-// isLessThanInclusive checks if given value is less than or equal to given upperBound
-func (b *BetRequestValidator) isLessThanInclusive(value, upperBound float64) bool {
-	return value <= upperBound
-}
-
 // isAnyFieldEmpty returns true if any field has default value, false otherwise
 func (b *BetRequestValidator) isAnyFieldEmpty(dto models.BetRequestDto) bool {
 	return dto.SelectionCoefficient == 0 || dto.Payment == 0 || dto.SelectionId == "" || dto.CustomerId == ""
@@ -34,5 +24,7 @@ func (b *BetRequestValidator) isAnyFieldEmpty(dto models.BetRequestDto) bool {
 // SelectionCoefficient is <= 10.0
 // Payment is in range [2.0, 100.0]
 func (b *BetRequestValidator) BetRequestIsValid(betRequestDto models.BetRequestDto) bool {
-	return !b.isAnyFieldEmpty(betRequestDto) && b.isLessThanInclusive(betRequestDto.SelectionCoefficient, coefficientToInclusive) && b.isWithinRangeInclusive(betRequestDto.Payment, paymentFromInclusive, paymentToInclusive)
+	return !b.isAnyFieldEmpty(betRequestDto) &&
+		betRequestDto.SelectionCoefficient <= coefficientToInclusive &&
+		betRequestDto.Payment >= paymentFromInclusive && betRequestDto.Payment <= paymentToInclusive
 }
