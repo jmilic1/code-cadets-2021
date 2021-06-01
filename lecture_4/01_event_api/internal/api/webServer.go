@@ -20,7 +20,7 @@ type WebServer struct {
 }
 
 // NewServer returns new server instance
-func NewServer(port, readWriteTimeoutMs int, ctrl Controller) *WebServer {
+func NewServer(port int, readWriteTimeoutMs int, ctrl Controller) *WebServer {
 	server := &WebServer{
 		router:             gin.Default(),
 		port:               port,
