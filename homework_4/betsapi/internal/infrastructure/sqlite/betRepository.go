@@ -69,7 +69,9 @@ func (b *BetRepository) GetBetById(ctx context.Context, id string) (models.Bet, 
 }
 
 func (b *BetRepository) queryGetBetById(ctx context.Context, id string) (models.Bet, error) {
-	row, err := b.dbExecutor.QueryContext(ctx, "SELECT * FROM bets WHERE id='"+id+"';")
+	selectBetSql := "SELECT  * FROM bets WHERE id=?"
+
+	row, err := b.dbExecutor.QueryContext(ctx, selectBetSql, id)
 	if err != nil {
 		return models.Bet{}, err
 	}
@@ -95,7 +97,9 @@ func (b *BetRepository) GetBetsByCustomerId(ctx context.Context, customerId stri
 }
 
 func (b *BetRepository) queryGetBetsByCustomerId(ctx context.Context, customerId string) ([]models.Bet, error) {
-	row, err := b.dbExecutor.QueryContext(ctx, "SELECT * FROM bets WHERE customer_id='"+customerId+"';")
+	selectBetSql := "SELECT  * FROM bets WHERE customer_id=?"
+
+	row, err := b.dbExecutor.QueryContext(ctx, selectBetSql, customerId)
 	if err != nil {
 		return []models.Bet{}, err
 	}
@@ -132,7 +136,9 @@ func (b *BetRepository) GetBetsByStatus(ctx context.Context, status string) ([]m
 }
 
 func (b *BetRepository) queryGetBetsByStatus(ctx context.Context, status string) ([]models.Bet, error) {
-	row, err := b.dbExecutor.QueryContext(ctx, "SELECT * FROM bets WHERE status='"+status+"';")
+	selectBetSql := "SELECT  * FROM bets WHERE status=?"
+
+	row, err := b.dbExecutor.QueryContext(ctx, selectBetSql, status)
 	if err != nil {
 		return []models.Bet{}, err
 	}
