@@ -1,7 +1,7 @@
 package mappers
 
 import (
-	dto "github.com/superbet-group/code-cadets-2021/homework_4/betsapi/internal/api/controllers/models"
+	controllermodels "github.com/superbet-group/code-cadets-2021/homework_4/betsapi/internal/api/controllers/models"
 	storagemodels "github.com/superbet-group/code-cadets-2021/homework_4/betsapi/internal/infrastructure/sqlite/models"
 )
 
@@ -14,8 +14,8 @@ func NewBetMapper() *BetMapper {
 }
 
 // MapStorageBetToDto maps the given storage bet into a dto bet.
-func (b *BetMapper) MapStorageBetToDto(storageBet storagemodels.Bet) dto.BetResultDto {
-	return dto.BetResultDto{
+func (b *BetMapper) MapStorageBetToDto(storageBet storagemodels.Bet) controllermodels.BetResultDto {
+	return controllermodels.BetResultDto{
 		Id:                   storageBet.Id,
 		Status:               storageBet.Status,
 		SelectionId:          storageBet.SelectionId,
