@@ -10,13 +10,20 @@ var Cfg Config
 
 // Config contains all the configuration needed for service to work.
 type Config struct {
-	Api    apiConfig    `split_words:"true"`
-	Rabbit rabbitConfig `split_words:"true"`
+	Api        apiConfig        `split_words:"true"`
+	Rabbit     rabbitConfig     `split_words:"true"`
+	Validation validationConfig `split_words:"true"`
 }
 
 type apiConfig struct {
 	ReadWriteTimeoutMs int `split_words:"true" default:"10000"`
 	Port               int `split_words:"true" default:"8083"`
+}
+
+type validationConfig struct {
+	PaymentFromInclusive   float64 `split_words:"true"`
+	PaymentToInclusive     float64 `split_words:"true"`
+	CoefficientToInclusive float64 `split_words:"true"`
 }
 
 type rabbitConfig struct {

@@ -12,8 +12,8 @@ import (
 	"github.com/superbet-group/code-cadets-2021/homework_4/betacceptance/internal/infrastructure/rabbitmq"
 )
 
-func newBetRequestValidator() *validators.BetRequestValidator {
-	return validators.NewBetRequestValidator()
+func newBetRequestValidator(paymentFromInclusive float64, paymentToInclusive float64, coefficientToInclusive float64) *validators.BetRequestValidator {
+	return validators.NewBetRequestValidator(paymentFromInclusive, paymentToInclusive, coefficientToInclusive)
 }
 
 func newIdGenerator() *infrastructure.IdGenerator {
@@ -40,7 +40,9 @@ func newController(betRequestValidator controllers.BetRequestValidator, betServi
 
 // Api bootstraps the http server.
 func Api(rabbitMqChannel *amqp.Channel) *api.WebServer {
-	betRequestValidator := newBetRequestValidator()
+	validationConfig := config.Cfg.Validation
+	betRequestValidator := newBetRequestValidator(validationConfig.PaymentFromInclusive, validationConfig.PaymentToInclusive, validationConfig.CoefficientToInclusive)
+
 	betReceivedPublisher := newBetReceivedPublisher(rabbitMqChannel)
 	idGenerator := newIdGenerator()
 
