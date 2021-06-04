@@ -10,7 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const eventUpdatePath = "/event/update"
+const betPath = "/bet/:id"
+const customerBetsPath = "/user/:id/bets"
+const statusBetsPath = "/bets"
 
 // WebServer Api server
 type WebServer struct {
@@ -46,7 +48,7 @@ func (w *WebServer) Start(ctx context.Context) {
 		errs <- err
 	}()
 
-	log.Printf("Started http server, port: %s, host: %s\n", w.port, "127.0.0.1")
+	log.Printf("Started http server, port: %d, host: %s\n", w.port, "127.0.0.1")
 
 	select {
 	case err := <-errs:
@@ -67,12 +69,16 @@ func (w *WebServer) Start(ctx context.Context) {
 	}
 }
 
-// RegisterRoutes registers gin routes
+// registerRoutes registers gin routes
 func (w *WebServer) registerRoutes(ctrl Controller) {
-	w.router.POST(eventUpdatePath, ctrl.UpdateEvent())
+	w.router.GET(betPath, ctrl.GetBet())
+	w.router.GET(customerBetsPath, ctrl.GetBetsByCustomerId())
+	w.router.GET(statusBetsPath, ctrl.GetBetsByStatus())
 }
 
 // Controller handles api calls
 type Controller interface {
-	UpdateEvent() gin.HandlerFunc
+	GetBet() gin.HandlerFunc
+	GetBetsByCustomerId() gin.HandlerFunc
+	GetBetsByStatus() gin.HandlerFunc
 }
