@@ -24,33 +24,19 @@ func NewBetRepository(dbExecutor DatabaseExecutor) *BetRepository {
 // readBet tries to read a single bet from given sql rows.
 // If sql row has no more rows to scan, an error is returned.
 func (b *BetRepository) readBet(row *sql.Rows) (models.Bet, error) {
-	var id string
-	var customerId string
-	var status string
-	var selectionId string
-	var selectionCoefficient int
-	var payment int
+	var bet models.Bet
 	var payoutSql sql.NullInt64
 
-	err := row.Scan(&id, &customerId, &status, &selectionId, &selectionCoefficient, &payment, &payoutSql)
+	err := row.Scan(&bet.Id, &bet.CustomerId, &bet.Status, &bet.SelectionId, &bet.SelectionCoefficient, &bet.Payment, &payoutSql)
 	if err != nil {
 		return models.Bet{}, err
 	}
 
-	var payout int
 	if payoutSql.Valid {
-		payout = int(payoutSql.Int64)
+		bet.Payout = int(payoutSql.Int64)
 	}
 
-	return models.Bet{
-		Id:                   id,
-		CustomerId:           customerId,
-		Status:               status,
-		SelectionId:          selectionId,
-		SelectionCoefficient: selectionCoefficient,
-		Payment:              payment,
-		Payout:               payout,
-	}, nil
+	return bet, nil
 }
 
 // GetBetById fetches a bet from the database and returns it. The second returned value indicates
